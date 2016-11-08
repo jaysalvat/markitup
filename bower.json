@@ -1,0 +1,15 @@
+{
+    "name": "markitup",
+    "version": "3.0.0-0",
+    "main": [
+        "dist/markitup.js",
+    ],
+    "ignore": [
+        "src",
+        "test",
+        "gulpfile.js",
+        "package.json"
+    ],
+    "dependencies": {
+    }
+}
