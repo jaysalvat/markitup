@@ -20,9 +20,7 @@ MarkItUp! is not a WYSIWYG editor, and it never will be.
 
 ## Install
  
-### Standard download
- 
-Download latest [MarkItUp! version](http://jaysalvat.github.io/markitup/releases/latest/markitup.zip).
+Download latest [MarkItUp! version](http://jaysalvat.github.io/markitup/releases/latest/markitup.zip) and include it to your page.
  
 ```html
 <link rel="stylesheet" href="/path/to/markitup/dist/markitup.min.css">
@@ -31,7 +29,11 @@ Download latest [MarkItUp! version](http://jaysalvat.github.io/markitup/releases
 ```html
 <script src="/path/to/markitup/dist/markitup.min.js"></script>
 ```
+
+### Bower install
  
+    bower install --save markitup
+    
 ### NPM install
  
     npm install --save markitup
@@ -39,8 +41,9 @@ Download latest [MarkItUp! version](http://jaysalvat.github.io/markitup/releases
 ### Yarn install
  
     yarn add markitup
- 
-### Bower install
- 
-    bower install --save markitup
 
+MarkItUp! 3.x is UMD and ES6/Webpack/Browserify friendly.
+
+```javascript
+import markitup from 'markitup';
+```
