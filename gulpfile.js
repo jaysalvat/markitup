@@ -4,17 +4,16 @@
 (function () {
     'use strict';
 
-    var pkg       = require('./package.json'),
-        del       = require('del'),
-        yargs     = require('yargs'),
-        fs        = require('fs'),
-        exec      = require('child_process').exec,
-        spawn     = require('child_process').spawn,
-        gulp      = require('gulp'),
-        plugins   = require('gulp-load-plugins')(),
-        gutil     = require('gulp-util'),
-        gsync     = require('gulp-sync'),
-        sync      = gsync(gulp).sync;
+    var pkg     = require('./package.json'),
+        del     = require('del'),
+        yargs   = require('yargs'),
+        fs      = require('fs'),
+        exec    = require('child_process').exec,
+        spawn   = require('child_process').spawn,
+        gulp    = require('gulp'),
+        plugins = require('gulp-load-plugins')(),
+        gutil   = require('gulp-util'),
+        sync    = require('gulp-sync')(gulp).sync;
 
     var argv = yargs
         .default('major',      false)
@@ -26,16 +25,16 @@
         .argv;
 
     var settings = {
-        name: 'mylib',
+        name: 'markitup',
         banner: {
             content: [
                 '/*!-----------------------------------------------------------------------------',
-                ' * <%= pkg.name %> — <%= pkg.description %>',
+                ' * MarkItUp — Boost your textareas',
                 ' * v<%= pkg.version %> - built <%= datetime %>',
                 ' * Licensed under the MIT License.',
                 ' * http://<%= pkg.name %>.jaysalvat.com/',
                 ' * ----------------------------------------------------------------------------',
-                ' * Copyright (C) <%= year %> Jay Salvat',
+                ' * Copyright (C) 2007-<%= year %> Jay Salvat',
                 ' * http://jaysalvat.com/',
                 ' * --------------------------------------------------------------------------*/',
                 ''
@@ -54,6 +53,145 @@
 
     gulp.task('clean', function (cb) {
         return del([ './dist' ], cb);
+    });
+
+    gulp.task('bump', function () {
+        var version = 'patch';
+
+        if (argv.major) {
+            version = 'major';
+        } else if (argv.minor) {
+            version = 'minor';
+        } else if (argv.prerelease) {
+            version = 'prerelease';
+        }
+
+        return gulp.src([ './package.json', './bower.json', ])
+            .pipe(plugins.bump({
+                type: version
+            }))
+            .pipe(gulp.dest('./'));
+    });
+
+    gulp.task('copyright-year', function () {
+        return gulp.src([ './LICENSE.md', './README.md' ])
+            .pipe(plugins.replace(/(Copyright )(\d{4}-)?(\d{4})/g, '$1$2' + gutil.date('yyyy')))
+            .pipe(gulp.dest('.'));
+    });
+
+    gulp.task('lint', function() {
+        return gulp.src('./src/**.js')
+            .pipe(plugins.jshint())
+            .pipe(plugins.jshint.reporter('default'));
+    });
+
+    gulp.task('sass', function () {
+        return gulp.src("./src/markitup.sass")
+            .pipe(plugins.if(argv.dev, plugins.sourcemaps.init()))
+            .pipe(plugins.sass({
+                outputStyle: 'expanded',
+                indentWidth: 4
+            }).on('error', plugins.sass.logError))
+            .pipe(plugins.autoprefixer())
+            .pipe(plugins.if(argv.dev, plugins.sourcemaps.write('maps')))
+            .pipe(gulp.dest("./dist/"));
+    });
+
+    gulp.task('js', function () {
+        var icons = fs.readFileSync('./src/markitup.icons.js', 'UTF-8');
+        icons = icons.replace(/\n/g, '\n    ');
+
+        return gulp.src([ './src/markitup.js', './src/markitup.jquery.js' ])
+            .pipe(plugins.replace('{ /* insert SVG icons here */ }', icons))
+            .pipe(gulp.dest('./dist'));
+    });
+
+    gulp.task('icons', function() {
+        return gulp.src('./src/icons/*.svg')
+            .pipe(plugins.rename({ extname: '' }))
+            .pipe(plugins.svgJsonSpritesheet('markitup.icons.js'))
+            .pipe(plugins.intercept(function(file) {
+                var json = JSON.parse(file.contents);
+
+                Object.keys(json).forEach(function (key) {
+                    json[key] = json[key].data;
+                });
+
+                file.contents = new Buffer(JSON.stringify(json, null, 4));
+
+                return file;
+            }))
+            .pipe(gulp.dest('./src'));
+    });
+
+    gulp.task('minify-js', function () {
+        return gulp.src('./dist/**/!(*.min.js).js')
+            .pipe(plugins.sourcemaps.init({ loadMaps: argv.dev }))
+            .pipe(plugins.uglify({
+                compress: {
+                    warnings: false
+                },
+                mangle: true,
+                outSourceMap: true,
+                preserveComments: 'license'
+            }))
+            .pipe(plugins.rename({ suffix: '.min' }))
+            .pipe(plugins.sourcemaps.write('maps'))
+            .pipe(gulp.dest('./dist/'));
+    });
+
+    gulp.task('minify-css', function () {
+        return gulp.src('./dist/**/!(*.min.css).css')
+            .pipe(plugins.sourcemaps.init({ loadMaps: argv.dev }))
+            .pipe(plugins.cleanCss())
+            .pipe(plugins.rename({ suffix: '.min' }))
+            .pipe(plugins.sourcemaps.write('maps'))
+            .pipe(gulp.dest('./dist/'));
+    });
+
+    gulp.task('header', function () {
+        settings.banner.vars.pkg = getPackageJson();
+
+        return gulp.src('./dist/*.js')
+            .pipe(plugins.header(settings.banner.content, settings.banner.vars ))
+            .pipe(gulp.dest('./dist/'));
+    });
+
+    gulp.task('changelog', function (cb) {
+        var filename  = 'CHANGELOG.md',
+            editor    = process.env.EDITOR || 'vim',
+            version   = getPackageJson().version,
+            date      = gutil.date('yyyy-mm-dd'),
+            changelog = fs.readFileSync(filename).toString(),
+            lastDate  = (/\d{4}-\d{2}-\d{2}/.exec(changelog) || [])[0] || new Date().toISOString().split('T')[0];
+
+        exec('git log --since="' + lastDate + ' 00:00:00" --oneline --pretty=format:"%s"', function (err, stdout) {
+            if (err) {
+                return cb(err);
+            }
+
+            if (!stdout) {
+                return cb();
+            }
+
+            var updates = [
+                '### markitup ' + version + ' ' + date,
+                '',
+                '* ' + stdout.replace(/\n/g, '\n* ')
+            ].join('\n');
+
+            changelog = changelog.replace(/(## CHANGE LOG)/, '$1\n\n' + updates);
+
+            fs.writeFileSync(filename, changelog);
+
+            var vim = spawn(editor, [ filename, '-n', '+7' ], {
+                stdio: 'inherit'
+            });
+
+            vim.on('close', function () {
+                return cb();
+            });
+        });
     });
 
     gulp.task('fail-if-dirty', function (cb) {
@@ -122,132 +260,6 @@
                 return cb();
             }
         );
-    });
-
-    gulp.task('bump', function () {
-        var version = 'patch';
-
-        if (argv.major) {
-            version = 'major';
-        } else if (argv.minor) {
-            version = 'minor';
-        } else if (argv.prerelease) {
-            version = 'prerelease';
-        }
-
-        return gulp.src([ './package.json', './bower.json', ])
-            .pipe(plugins.bump({
-                type: version
-            }))
-            .pipe(gulp.dest('./'));
-    });
-
-    gulp.task('year', function () {
-        return gulp.src([ './LICENSE.md', './README.md' ])
-            .pipe(plugins.replace(/(Copyright )(\d{4})/g, '$1' + gutil.date('yyyy')))
-            .pipe(gulp.dest('maps'));
-    });
-
-    gulp.task('lint', function() {
-        return gulp.src('./src/**.js')
-            .pipe(plugins.jshint())
-            .pipe(plugins.jshint.reporter('default'));
-    });
-
-    gulp.task('test', function() {
-        return gulp.src('./test/tests.js')
-            .pipe(plugins.mocha());
-    });
-
-    gulp.task('sass', function () {
-        return gulp.src("./src/sass/mylib.sass")
-            .pipe(plugins.if(argv.dev, plugins.sourcemaps.init()))
-            .pipe(plugins.sass({
-                outputStyle: 'expanded',
-                indentWidth: 4
-            }).on('error', plugins.sass.logError))
-            .pipe(plugins.autoprefixer())
-            .pipe(plugins.if(argv.dev, plugins.sourcemaps.write('maps')))
-            .pipe(gulp.dest("./dist/"));
-    });
-
-    gulp.task('es6', function () {
-        return gulp.src("./src/**/*.js")
-            .pipe(plugins.if(argv.dev, plugins.sourcemaps.init()))
-            .pipe(plugins.babel({
-                presets: ['es2015-script']
-            }))
-            .pipe(plugins.if(argv.dev, plugins.sourcemaps.write('maps')))
-            .pipe(gulp.dest("./dist/"));
-    });
-
-    gulp.task('minify-js', function () {
-        return gulp.src('./dist/**/!(*.min.js).js')
-            .pipe(plugins.sourcemaps.init({ loadMaps: argv.dev }))
-            .pipe(plugins.uglify({
-                compress: {
-                    warnings: false
-                },
-                mangle: true,
-                outSourceMap: true
-            }))
-            .pipe(plugins.rename({ suffix: '.min' }))
-            .pipe(plugins.sourcemaps.write('maps'))
-            .pipe(gulp.dest('./dist/'));
-    });
-
-    gulp.task('minify-css', function () {
-        return gulp.src('./dist/**/!(*.min.css).css')
-            .pipe(plugins.sourcemaps.init({ loadMaps: argv.dev }))
-            .pipe(plugins.cleanCss())
-            .pipe(plugins.rename({ suffix: '.min' }))
-            .pipe(plugins.sourcemaps.write('maps'))
-            .pipe(gulp.dest('./dist/'));
-    });
-
-    gulp.task('header', function () {
-        settings.banner.vars.pkg = getPackageJson();
-
-        return gulp.src('./dist/*.js')
-            .pipe(plugins.header(settings.banner.content, settings.banner.vars ))
-            .pipe(gulp.dest('./dist/'));
-    });
-
-    gulp.task('changelog', function (cb) {
-        var filename  = 'CHANGELOG.md',
-            editor    = process.env.EDITOR || 'vim',
-            version   = getPackageJson().version,
-            date      = gutil.date('yyyy-mm-dd'),
-            changelog = fs.readFileSync(filename).toString(),
-            lastDate  = (/\d{4}-\d{2}-\d{2}/.exec(changelog) || [])[0] || new Date().toISOString().split('T')[0];
-
-        exec('git log --since="' + lastDate + ' 00:00:00" --oneline --pretty=format:"%s"', function (err, stdout) {
-            if (err) {
-                return cb(err);
-            }
-
-            if (!stdout) {
-                return cb();
-            }
-
-            var updates = [
-                '### mylib ' + version + ' ' + date,
-                '',
-                '* ' + stdout.replace(/\n/g, '\n* ')
-            ].join('\n');
-
-            changelog = changelog.replace(/(## CHANGE LOG)/, '$1\n\n' + updates);
-
-            fs.writeFileSync(filename, changelog);
-
-            var vim = spawn(editor, [ filename, '-n', '+7' ], {
-                stdio: 'inherit'
-            });
-
-            vim.on('close', function () {
-                return cb();
-            });
-        });
     });
 
     /** Publish on Github **/
@@ -322,7 +334,7 @@
     ],
     'publising'));
 
-    /** // Publish on Github **/
+    /** Misc taks **/
 
     gulp.task('default', [ 'watch' ]);
 
@@ -334,7 +346,7 @@
     gulp.task('build', sync([
         'clean',            // Remove /dist folder
         'sass',             // Transpile SASS
-        'es6',              // Transpile ES6
+        'js',               // Transpile ES6
         'header',           // Add Comment Headers
         'minify-css',       // Minify CSS
         'minify-js',        // Minify JS
@@ -345,12 +357,10 @@
       [ 'fail-if-not-master', 'fail-if-dirty' ], // Dirty or not master?
         'git-pull',         // Pull repository
         'lint',             // Lint JS
-        'es6', 'minify-js', // JS transpilation/minification for unit tests
-        'test',             // Test before bumping
         'bump',             // Bump version
         'build',            // Second complete build with version bumped
         'changelog',        // Get last commit and auto edit the changlog in VIM
-        'year',             // Change years in .md
+        'copyright-year',   // Change Copyright years in .md
         'git-add',          // Git add changes
         'git-commit',       // Git commit new build
         'git-tag',          // Create Git tag

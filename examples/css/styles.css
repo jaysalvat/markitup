@@ -1,0 +1,41 @@
+body {
+    background: #fafafa;
+    color: #333;
+    font: 14px Arial, sans-serif;
+    max-width: 650px;
+    margin: 50px auto;
+    padding: 10px;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    font-size: 20px;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+p {
+    font-size: 12px;
+}
+
+h1 {
+    text-transform: uppercase;
+}
+
+a {
+    color: #2DC0D2;
+    text-decoration: none;
+}
+
+.button {
+    display: block;
+    width: 180px;
+    margin: 10px auto;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    padding: 15px;
+    background: #2DC0D2;
+    font-size: 11px;
+    color: white;
+    text-transform: uppercase;
+}

@@ -1,0 +1,109 @@
+.markitup-overlay
+    background: $dialog-color-overlay
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    cursor: pointer
+    text-transform: uppercase
+    opacity: 0
+    transition: opacity .25s ease-out
+
+    &.markitup-transition
+        opacity: 1
+
+.markitup-dialog
+    position: fixed
+    top: 50%
+    left: 50%
+    width: 90%
+    border: 1px solid $dialog-color-border
+    box-shadow: 0 19px 38px rgba(black, 0.20), 0 15px 12px rgba(black, 0.22)
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    background: white
+    background: $dialog-color-footer-background
+    overflow: hidden
+    font-family: $font
+    transform: translate(-50%, -50%)
+    opacity: 0
+    transition: transform .25s ease-out
+
+    @media (min-width: $breakpoint)
+        width: 500px
+    
+.markitup-dialog.markitup-transition
+    opacity: 1
+
+.markitup-dialog-header,
+.markitup-dialog-body,
+.markitup-dialog-footer
+    padding: 12px 20px
+
+.markitup-dialog-header
+    background-color: $dialog-color-header-background
+    color: $dialog-color-header-text
+
+    h4
+        font-size: 16px
+        font-weight: normal
+
+.markitup-dialog-footer
+    text-align: right
+    background-color: $dialog-color-footer-background
+    color: $dialog-color-footer-text
+
+.markitup-dialog-header
+    border-bottom: 1px solid $dialog-color-header-border
+
+.markitup-dialog-footer
+    border-top: 1px solid $dialog-color-footer-border
+
+.markitup-dialog-body
+    font-size: .8em
+    background-color: $dialog-color-body-background
+    color: $dialog-color-body-text
+
+    label
+        display: block
+        font-weight: bold
+        margin-bottom: 10px
+
+    div:not(:last-child)
+        margin-bottom: 15px
+
+    input,
+    select,
+    textarea
+        padding: 15px
+        width: 100%
+        border: 1px solid $dialog-color-border
+        border-radius: $dialog-border-radius
+
+        &:focus
+            outline: 1px solid $color-main
+
+    input[type="checkbox"],
+    input[type="radio"]
+        width: auto
+        border: none
+        margin: auto 5px
+
+.markitup-dialog-button
+    background: white
+    padding: 1em
+    border-radius: $dialog-border-radius
+    cursor: pointer
+    margin-left: 10px
+    text-transform: uppercase
+
+.markitup-dialog-submit
+    color: white
+    color: $dialog-color-submit-text
+    background-color: $dialog-color-submit-background
+    font-weight: bold
+
+.markitup-dialog-close
+    color: $dialog-color-close-text
+    background-color: $dialog-color-close-background
+    font-weight: bold

@@ -1,0 +1,84 @@
+.markitup-button-wrapper
+    display: inline-block
+
+    &.markitup-open > .markitup-dropdown
+        visibility: visible
+
+.markitup-dropdown
+    padding: 0
+    margin: 0
+    border: 1px solid $menu-color-border
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
+    list-style: none
+    font-size: 12px
+    background: $menu-color-background
+    z-index: 2
+    position: absolute
+    width: calc(100% - 16px)
+    margin: 5px auto
+    left: 0
+    right: 0
+    visibility: hidden
+
+    @media (min-width: $breakpoint)
+        width: auto
+        min-width: 200px
+        left: auto
+        right: auto
+
+    .markitup-dropdown
+        top: 25px
+
+        @media (min-width: $breakpoint)
+            top: 0
+            transform: translateX(75%) translateY(2px)
+        
+    li
+        position: relative
+
+        &.markitup-open > .markitup-dropdown
+            visibility: visible
+        
+        &:last-child
+            border-bottom: none
+        
+    i
+        margin-right: 10px
+        vertical-align: middle
+
+    a
+        display: block
+        padding: 10px
+        padding-right: 30px
+        background-color: $menu-color-background
+        color: $menu-color-text
+        font-family: $menu-font
+        font-size: $menu-font-size
+        text-decoration: none
+
+        &:hover
+            color: $menu-color-text-hover
+            background-color: $menu-color-background-hover
+
+.markitup-caret
+    width: 0
+    height: 0
+    border: 5px solid transparent
+    position: absolute
+    display: inline-block
+    margin: 2px
+
+    .markitup-button &
+        border-width: 3px
+        border-top-color: $menu-color-caret
+        bottom: 0px
+        right: 0px
+
+    .markitup-dropdown &
+        right: 5px
+        border-top-color: $menu-color-caret
+
+        @media (min-width: $breakpoint)
+            border-left-color: $menu-color-caret
+            border-top-color: transparent
+

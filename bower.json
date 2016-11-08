@@ -1,15 +1,20 @@
 {
-    "name": "markitup",
-    "version": "3.0.0-0",
-    "main": [
-        "dist/markitup.js",
-    ],
-    "ignore": [
-        "src",
-        "test",
-        "gulpfile.js",
-        "package.json"
-    ],
-    "dependencies": {
-    }
+  "name": "markitup",
+  "version": "3.0.0-0",
+  "main": [
+    "dist/markitup.min.js",
+    "dist/markitup.min.css"
+  ],
+  "ignore": [
+    "src",
+    "dev",
+    "node_modules",
+    "test",
+    "tmp",
+    "gulpfile.js",
+    "yarn.lock",
+    "package.json",
+    "DEVELOPMENT.md"
+  ],
+  "dependencies": {}
 }

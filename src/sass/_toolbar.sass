@@ -1,0 +1,47 @@
+.markitup-button-row
+    padding-bottom: $margin
+    overflow-x: auto
+    white-space: nowrap
+
+.markitup-button-group
+    display: inline-block
+    margin-right: $margin
+
+    .markitup-button
+        border-right: none
+        outline: none
+    
+    .markitup-button-wrapper:nth-child(1) .markitup-button
+        border-top-left-radius: $button-border-radius
+        border-bottom-left-radius: $button-border-radius
+
+    .markitup-button-wrapper:last-child .markitup-button
+        border-top-right-radius: $button-border-radius
+        border-bottom-right-radius: $button-border-radius
+        border-right: 1px solid $button-color-border
+
+.markitup-button
+    position: relative
+    background: $button-color-background
+    border: 1px solid $button-color-border
+    display: inline-block
+    cursor: pointer
+    width: $button-size * 2.3
+    height: $button-size * 2.3
+    padding: $button-size / 2.3
+
+    span
+        display: none
+
+    &:hover
+        color: $button-color-icon-hover
+        background: $button-color-background-hover
+
+        svg 
+            fill: $button-color-icon-hover
+
+.markitup-icon 
+    svg
+        width: $button-size
+        height: $button-size
+
