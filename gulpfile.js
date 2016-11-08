@@ -29,7 +29,7 @@
         banner: {
             content: [
                 '/*!-----------------------------------------------------------------------------',
-                ' * MarkItUp — Boost your textareas',
+                ' * MarkItUp! — Boost your textareas',
                 ' * v<%= pkg.version %> - built <%= datetime %>',
                 ' * Licensed under the MIT License.',
                 ' * http://<%= pkg.name %>.jaysalvat.com/',
@@ -175,7 +175,7 @@
             }
 
             var updates = [
-                '### markitup ' + version + ' ' + date,
+                '### MarkItUp! ' + version + ' ' + date,
                 '',
                 '* ' + stdout.replace(/\n/g, '\n* ')
             ].join('\n');
