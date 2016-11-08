@@ -10,20 +10,32 @@ Install depedencies
 
     npm install
 
-## DEV
+## Development
 
-Build and watch
+Edit source in `/src`, NEVER in `/dist`.
+
+### Build and watch
 
     gulp
 
-Build
+### Build
 
     gulp build
 
-Watch
+### Watch
 
     gulp watch
 
-Release
+### Release
+
+Bump version, create tag, push on Github, post a ZIP file and scripts on Github
+pages branch, publish on NPM.
 
     gulp release --[major,minor,patch,prerelease]
+
+### Add/modify icons of the toolbar
+
+Add or replace a SVG file in the `/src/svg`folder, then:
+
+    gulp icons
+    gulp build
