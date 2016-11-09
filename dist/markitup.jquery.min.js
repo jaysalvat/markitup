@@ -1,6 +1,6 @@
 /*!-----------------------------------------------------------------------------
- * MarkItUp — Boost your textareas
- * v3.0.0-0 - built 2016-11-08
+ * MarkItUp! — Boost your textareas
+ * v3.0.0-0 - built 2016-11-09
  * Licensed under the MIT License.
  * http://markitup.jaysalvat.com/
  * ----------------------------------------------------------------------------

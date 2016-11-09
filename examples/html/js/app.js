@@ -9,7 +9,8 @@ var markitup = new MarkItUp('#markitup', {
         'Ctrl Shift R': function (e) {
             this.refreshPreview();
             e.preventDefault();
-        }
+        },
+        'Shift Enter': '<br />'
     },
     toolbar: [
         {   name: 'Link',

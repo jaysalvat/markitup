@@ -1,6 +1,6 @@
 /*!-----------------------------------------------------------------------------
- * MarkItUp — Boost your textareas
- * v3.0.0-0 - built 2016-11-08
+ * MarkItUp! — Boost your textareas
+ * v3.0.0-0 - built 2016-11-09
  * Licensed under the MIT License.
  * http://markitup.jaysalvat.com/
  * ----------------------------------------------------------------------------
@@ -565,6 +565,22 @@
                 keys = shortcut.split(' ');
                 keys.sort();
                 shortcut = keys.join(' ').toUpperCase();
+
+                if (typeof callback === 'object') {
+                    var settings = callback;
+
+                    callback = function () {
+                        self.do(settings);
+                    };
+                }
+
+                if (typeof callback === 'string') {
+                    var content = callback;
+
+                    callback = function () {
+                        self.insert(content);
+                    };
+                }
 
                 if (typeof callback === 'function') {
                     self.shortcuts[shortcut] = callback;

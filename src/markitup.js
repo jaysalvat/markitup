@@ -557,6 +557,22 @@
                 keys.sort();
                 shortcut = keys.join(' ').toUpperCase();
 
+                if (typeof callback === 'object') {
+                    var settings = callback;
+
+                    callback = function () {
+                        self.do(settings);
+                    };
+                }
+
+                if (typeof callback === 'string') {
+                    var content = callback;
+
+                    callback = function () {
+                        self.insert(content);
+                    };
+                }
+
                 if (typeof callback === 'function') {
                     self.shortcuts[shortcut] = callback;
 
