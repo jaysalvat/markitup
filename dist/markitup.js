@@ -615,7 +615,7 @@
 
         indent: function () {
             this.insertBefore(this.settings.tab, {
-                select:    !!this.getSelection().text,
+                select:    this.getSelection().text ? 'outer' : false,
                 multiline: true,
                 autotab:   false
             });
