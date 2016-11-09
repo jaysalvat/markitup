@@ -337,11 +337,7 @@
                         e.stopPropagation();
                         e.preventDefault();
 
-                        var selection = self.getSelection();
-
                         MarkItUp.utils.addClass(this, 'markitup-open');
-
-                        self.setSelection(selection.start, selection.len);
                     });
 
                     button.appendChild(dropdown);
@@ -856,7 +852,7 @@
                     select = 'inner';
                 }
 
-                if (self.shiftPressed && self.ctrlPressed) {
+                if (self.shiftPressed) {
                     multiline = true;
                 }
 
@@ -1085,8 +1081,8 @@
                 return (typeof placeholder === 'string') ? placeholder : '';
             };
 
-            // Alt content: {A:}...{A}...{:A}
-            string = string.replace(this.regexp.alt, function (string, value1, value2) {
+            // Alt content: {A:}...{OR}...{:A}
+            string = string.replace(this.regexp.alt, function (string, value1, orPart, value2) {
                 if (self.altPressed) {
                     return value2 || '';
                 }

@@ -67,14 +67,14 @@ var markitup = new MarkItUp('#markitup', {
         {   name: 'Bold',
             icon: 'bold',
             shortcut: 'Ctrl Shift B',
-            before: '<b>',
-            after: '</b>'
+            before: '{A:}<strong>{OR}<b>{:A}',
+            after: '{A:}</strong>{OR}</b>{:A}',
         },
         {   name: 'Italic',
             icon: 'italic',
             shortcut: 'Ctrl Shift I',
-            before: '<em>',
-            after: '</em>'
+            before: '{A:}<em>{OR}<i>{:A}',
+            after: '{A:}</em>{OR}</i>{:A}',
         },
         {   name: 'Strike Through',
             icon: 'strikethrough',
@@ -88,14 +88,14 @@ var markitup = new MarkItUp('#markitup', {
         {   name: 'Unordered List',
             icon: 'list-ul',
             beforeBlock: '<ul>\n',
-            before: '{T}<li>{#}. ',
+            before: '{T}<li>',
             after: '</li>',
             afterBlock: '\n</ul>',
             multiline: true
         },
         {   name: 'Ordered List',
             icon: 'list-ol',
-            content: '<ol>\n{M:}{T}<li>{#} - {M}</li>{:M}\n</ol>',
+            content: '<ol>\n{M:}{T}<li>{M}</li>{:M}\n</ol>',
         }
     ]
 });
