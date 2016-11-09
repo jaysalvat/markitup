@@ -335,30 +335,24 @@
 
                     button.addEventListener(click, function (e) {
                         e.stopPropagation();
+                        e.preventDefault();
+
+                        var selection = self.getSelection();
 
                         MarkItUp.utils.addClass(this, 'markitup-open');
+
+                        self.setSelection(selection.start, selection.len);
                     });
 
                     button.appendChild(dropdown);
+                } else {
+                    self._click(button.querySelector('button'), setting);
                 }
-
-                self._click(button.querySelector('button'), setting);
 
                 group.appendChild(button);
             });
 
             return toolbar;
-        },
-
-        _initPlugins: function () {
-            var self = this,
-                plugins = MarkItUp.plugins;
-
-            for (var key in plugins) {
-                if (plugins.hasOwnProperty(key)) {
-                    self.register(plugins[key]);
-                }
-            }
         },
 
         _initDropdown: function (settings) {
@@ -463,6 +457,17 @@
                 'line':       new RegExp(single[0] + keywords.multiline + single[1], 'g'),
                 'number':     new RegExp(single[0] + keywords.number + single[1], 'g')
             };
+        },
+
+        _initPlugins: function () {
+            var self = this,
+                plugins = MarkItUp.plugins;
+
+            for (var key in plugins) {
+                if (plugins.hasOwnProperty(key)) {
+                    self.register(plugins[key]);
+                }
+            }
         },
 
         _initKeyEvents: function () {
@@ -832,6 +837,8 @@
             }
 
             function doJob (settings) {
+                self.textarea.focus();
+
                 var selection   = self.getSelection(),
                     beforeBlock = self._funcOrArg(settings.beforeBlock) || '',
                     before      = self._funcOrArg(settings.before) || '',
@@ -1581,6 +1588,7 @@
 
         _click: function (elmt, setting) {
             var self = this;
+            var selection = self.getSelection();
 
             function insertion (e) {
                 e.preventDefault();
