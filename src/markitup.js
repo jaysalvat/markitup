@@ -874,6 +874,10 @@
 
                 // Single line Mode
                 } else {
+                    if (autotab) {
+                        content = content.replace(tabsAtTheBeginningRE, '');
+                    }
+
                     // Push special char after the closing tag
                     if (specialAtTheEnd) {
                         content = content.replace(specialAtTheEndRE, '');
@@ -899,7 +903,9 @@
 
                 // Retab all lines
                 if (autotab) {
-                    content = content.replace(/\n/g, '\n' + self.tabs());
+                    if (multiline) {
+                        content = content.replace(/\n/g, '\n' + self.tabs());
+                    }
                     content = content.replace(new RegExp(self.tabs() + '$'), '');
 
                     if (tabsAtTheBeginning) {

@@ -137,7 +137,7 @@
     padding-right: 30px;
     background-color: #fff;
     color: #000;
-    font-family: "Helvetica Neue", Helvetica;
+    font-family: "Lucida Console", Monaco, monospace;
     font-size: 1em;
     text-decoration: none;
 }
@@ -185,8 +185,8 @@
     background: #fff;
     outline: none;
     color: #000;
-    font-family: "Helvetica Neue", Helvetica;
-    font-size: 0.8em;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 0.85em;
     line-height: 1.45;
 }
 
@@ -232,7 +232,7 @@
     background: white;
     background: #fefefe;
     overflow: hidden;
-    font-family: "Helvetica Neue", Helvetica;
+    font-family: "Lucida Console", Monaco, monospace;
     -webkit-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
     opacity: 0;
@@ -341,3 +341,5 @@
     background-color: #fff;
     font-weight: bold;
 }
+
+/*# sourceMappingURL=maps/markitup.css.map */
