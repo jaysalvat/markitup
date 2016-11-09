@@ -12,7 +12,7 @@ in their web-apps.
 
 MarkItUp! is not a WYSIWYG editor, and it never will be.
 
-![Screenshot](https://jaysalvat.github.io/markitup/screenshots/2-small.png)
+![Screenshot](https://jaysalvat.github.io/markitup/screenshots/2-small.png) 
 
 **Home:**
 [http://markitup.jaysalvat.com/](http://markitup.jaysalvat.com/)
