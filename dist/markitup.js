@@ -1601,7 +1601,6 @@
 
         _click: function (elmt, setting) {
             var self = this;
-            var selection = self.getSelection();
 
             function insertion (e) {
                 e.preventDefault();
