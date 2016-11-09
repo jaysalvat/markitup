@@ -146,13 +146,19 @@
     MarkItUp.prototype = {
         defaults: defaults,
         defaultShortcuts: {
-            "Enter": function (e) {
+            "Enter": function () {
                 if (this.settings.autoTab) {
-                    e.preventDefault();
+                    var self = this;
+                    // Wait for the browser to add a \n
+                    // in order to get the tab number of the previous line (after \n)
+                    // and append it to the new line
+                    setTimeout(function () {
+                        var tabs = self.tabs(-1);
 
-                    this.insert('\n' + this.tabs(), {
-                        'select': false
-                    });
+                        if (tabs) {
+                            self.insert(tabs, { 'select': false });
+                        }
+                    }, 1);
                 } else {
                     this.refreshPreview();
                 }
@@ -1030,10 +1036,15 @@
             this.do(settings);
         },
 
-        tabs: function () {
+        tabs: function (delta) {
             var regex = new RegExp('^(' + this.settings.tab + ')*', 'g'),
                 line  = this.getLine(),
                 matches;
+
+            // If needed, get another line +1 or -1 from the current
+            if (delta !== undefined) {
+                line = this.getLine(line.number - delta);
+            }
 
             if (!line) {
                 return '';

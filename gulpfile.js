@@ -134,7 +134,7 @@
                 mangle: true,
                 outSourceMap: true,
                 preserveComments: 'license'
-            }))
+            }).on('error', gutil.log))
             .pipe(plugins.rename({ suffix: '.min' }))
             .pipe(plugins.sourcemaps.write('maps'))
             .pipe(gulp.dest('./dist/'));
