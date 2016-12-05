@@ -5,10 +5,7 @@
   "homepage": "http://markitup.jaysalvat.com",
   "author": "Jay Salvat",
   "license": "MIT",
-  "main": [
-    "dist/markitup.min.js",
-    "dist/markitup.min.css"
-  ],
+  "main": "dist/markitup.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/jaysalvat/markitup.git"
